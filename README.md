@@ -39,5 +39,20 @@ Aplicación MVP para Windows que permite consolidar textos desde múltiples arch
 1. Abrir una terminal en la carpeta del proyecto.
 2. Crear un entorno virtual:
 
+##  Uso
+Pasos
+Desde la carpeta del proyecto:
+bash
+1  python -m venv .venv
+Activar el entorno virtual:
+bash
+1  .venv\Scripts\activate
+Instalar dependencias:
+bash
+1  pip install -r requirements.txt
+Ejecutar la aplicación:
+bash
+1  python run.py
+
 ```bash
 python -m venv .venv
