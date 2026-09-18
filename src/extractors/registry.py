@@ -48,12 +48,20 @@ class ExtractorRegistry:
         return self._by_extension.get(path.suffix.lower())
 
 
-def create_default_registry() -> ExtractorRegistry:
+def create_default_registry(ocr=None) -> ExtractorRegistry:
     """
     Crea el registro con los extractores incluidos por defecto.
+
+    `ocr` acepta el nombre de un proveedor ("tesseract", "easyocr") o una
+    instancia; si se solicita un proveedor no disponible se lanza ValueError.
     """
+    from src.core.ocr import get_provider
+
+    provider = get_provider(ocr) if isinstance(ocr, str) else ocr
+    if provider is not None and not provider.is_available():
+        raise ValueError(f"OCR provider '{provider.name}' is not available")
     registry = ExtractorRegistry()
     registry.register(PlainTextExtractor())
     registry.register(DocxExtractor())
-    registry.register(PdfExtractor())
+    registry.register(PdfExtractor(ocr_provider=provider))
     return registry

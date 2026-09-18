@@ -11,6 +11,8 @@ Para agregar un nuevo formato:
 from abc import ABC, abstractmethod
 from pathlib import Path
 
+from src.core.models import Block, Document, DocumentSource
+
 
 class TextExtractor(ABC):
     """
@@ -18,6 +20,13 @@ class TextExtractor(ABC):
     """
 
     extensions: tuple[str, ...] = ()
+
+    def extract_structured(self, path: Path) -> Document:
+        text = self.extract(path)
+        return Document(
+            source=DocumentSource.from_path(path),
+            blocks=[Block(kind="paragraph", text=text)],
+        )
 
     @abstractmethod
     def extract(self, path: Path) -> str:
