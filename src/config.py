@@ -41,6 +41,13 @@ def get_settings_path() -> Path:
     return folder / "settings.json"
 
 
+def get_journal_path() -> Path:
+    """
+    Obtiene la ruta del diario de sesión (recuperación tras cierres).
+    """
+    return get_settings_path().parent / "session.jsonl"
+
+
 @dataclass
 class AppSettings:
     dark_mode: bool = False
@@ -49,6 +56,7 @@ class AppSettings:
     output_format: str = ".txt"
     recent_folders: List[str] = field(default_factory=list)
     max_recent_folders: int = 10
+    language: str = "es"
 
     @classmethod
     def load(cls) -> "AppSettings":
@@ -87,6 +95,9 @@ class AppSettings:
 
             if not isinstance(data.get("max_recent_folders"), int):
                 data["max_recent_folders"] = 10
+
+            if data.get("language") not in ("es", "en"):
+                data["language"] = "es"
 
             valid_fields = cls.__dataclass_fields__.keys()
             clean_data = {

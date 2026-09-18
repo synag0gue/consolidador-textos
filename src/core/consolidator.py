@@ -7,15 +7,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List, Optional
 
-from src.config import AppSettings
-from src.core.models import ConsolidationFile
+from src.core.models import ConsolidationFile, ConsolidationOptions, Document
 from src.extractors.registry import ExtractorRegistry
 
 
 def extract_file(path: Path, registry: ExtractorRegistry) -> str:
-    """
-    Extrae el texto de un archivo usando el extractor adecuado.
-    """
+    return extract_document(path, registry).to_plain_text()
+
+
+def extract_document(path: Path, registry: ExtractorRegistry) -> Document:
     if not path.exists():
         raise ValueError("El archivo no existe.")
 
@@ -28,11 +28,11 @@ def extract_file(path: Path, registry: ExtractorRegistry) -> str:
         suffix = path.suffix or "sin extensión"
         raise ValueError(f"Formato no soportado: {suffix}")
 
-    return extractor.extract(path)
+    return extractor.extract_structured(path)
 
 
 def render_separator(
-    settings: AppSettings,
+    settings: ConsolidationOptions,
     next_file: Optional[ConsolidationFile] = None,
 ) -> str:
     """
@@ -66,7 +66,7 @@ def render_separator(
 
 def build_output(
     files: List[ConsolidationFile],
-    settings: AppSettings,
+    settings: ConsolidationOptions,
 ) -> str:
     """
     Construye el texto consolidado final.

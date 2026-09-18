@@ -56,3 +56,30 @@ bash
 
 ```bash
 python -m venv .venv
+```
+
+## Ejecutable de Windows
+
+Para usuarios sin Python, el proyecto incluye `consolidador.spec`:
+
+```bash
+pip install pyinstaller
+pyinstaller consolidador.spec --noconfirm
+```
+
+El resultado es `dist/ConsolidadorTextos.exe` (~70 MB, un solo archivo,
+sin consola). Las funciones opcionales que requieren programas externos
+(Tesseract) u opcionales pesados (EasyOCR) no van incluidas: se detectan
+en ejecución si están disponibles.
+
+## Automatización (CLI)
+
+Sin interfaz gráfica:
+
+```bash
+python -m src.cli merge ./docs -o out.docx --separator filename --recursive
+python -m src.cli run receta.yaml --overwrite
+python -m src.cli handoff ./docs -o ./paquete-ia
+```
+
+Ver `docs/PLAN.md` (arquitectura) y `docs/RECIPES.md` (recetas por rol).
